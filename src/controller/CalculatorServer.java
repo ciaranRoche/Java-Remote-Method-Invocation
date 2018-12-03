@@ -1,10 +1,13 @@
 package controller;
 
+import com.sun.security.ntlm.Server;
 import model.Calculator;
+import view.ServerView;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 
 
@@ -17,6 +20,8 @@ Purpose: The RMI server which handles calculator mathematical methods.
 
 public class CalculatorServer extends UnicastRemoteObject implements Calculator {
 
+    static ServerView view = new ServerView();
+
     /*
     Class constructor inherits from UnicastRemoteObject
      */
@@ -27,32 +32,48 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
 
     @Override
     public double add(double num1, double num2) throws RemoteException {
-        System.out.println("Add Method Called : " + num1 + " + " + num2  );
+        handleClientConnectionDetails();
+        view.handleAction("Add Method Called : " + num1 + " + " + num2 + "\nData Passed Back to Client : " + (num1 + num2) );
         return num1 + num2;
     }
 
     @Override
     public double subtract(double num1, double num2) throws RemoteException {
-        System.out.println("Subtract Method Called : "  + num1 + " - " + num2);
+        handleClientConnectionDetails();
+        view.handleAction("Subtract Method Called : "  + num1 + " - " + num2 + "\nData Passed Back to Client : " + (num1 - num2));
         return num1 - num2;
     }
 
     @Override
     public double multiply(double num1, double num2) throws RemoteException {
-        System.out.println("Multiply Method Called : "  + num1 + " * " + num2);
+        handleClientConnectionDetails();
+        view.handleAction("Multiply Method Called : "  + num1 + " * " + num2 + "\nData Passed Back to Client : " + (num1 * num2));
         return num1 * num2;
     }
 
     @Override
     public double divide(double num1, double num2) throws RemoteException {
-        System.out.println("Divide Method Called : "  + num1 + " + " + num2);
+        handleClientConnectionDetails();
+        view.handleAction("Divide Method Called : "  + num1 + " + " + num2 + "\nData Passed Back to Client : " + (num1 / num2));
         return num1 / num2;
     }
 
     @Override
     public double power(double num1, double num2) throws RemoteException {
-        System.out.println("Power Method Called : "  + num1 + " ^ " + num2);
+        handleClientConnectionDetails();
+        view.handleAction("Power Method Called : "  + num1 + " ^ " + num2 + "\nData Passed Back to Client : " + (Math.pow(num1,num2)));
         return Math.pow(num1, num2);
+    }
+
+    /*
+    Prints
+     */
+    public void handleClientConnectionDetails(){
+        try {
+            view.handleAction("Client Connected at : " + getClientHost());
+        } catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -66,7 +87,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
 
             registry.rebind("Calculator", obj);
 
-            System.out.println("CalculatorServer bound in registry");
+            view.handleAction("CalculatorServer bound in registry");
 
         } catch (Exception e) {
             System.out.println("CalculatorServer error : " + e.getMessage());

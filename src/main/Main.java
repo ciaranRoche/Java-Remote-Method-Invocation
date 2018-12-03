@@ -2,6 +2,7 @@ package main;
 
 import controller.CalculatorServer;
 import view.CalculatorView;
+import view.ServerView;
 
 import java.rmi.RemoteException;
 
@@ -14,7 +15,7 @@ Purpose: Main Class that launches RMI Server and Calculator Application.
 
 public class Main {
 
-    public static void main(String args[]) throws RemoteException {
+    public static void main(String ... args) throws RemoteException {
         CalculatorServer.main();
         new CalculatorView();
     }
