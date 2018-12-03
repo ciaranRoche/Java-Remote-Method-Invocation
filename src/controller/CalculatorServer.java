@@ -2,8 +2,12 @@ package controller;
 
 import com.sun.security.ntlm.Server;
 import model.Calculator;
+import view.CalculatorView;
 import view.ServerView;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -94,4 +98,5 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
             e.printStackTrace();
         }
     }
+
 }
